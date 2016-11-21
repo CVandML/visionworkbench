@@ -1,0 +1,351 @@
+\chapter{Tools}\label{ch:tools}
+
+Vision Workbench has various tools that are handy for working with graphics. The tools can be found in the \verb#VisionWorkbench/src/vw/tools# folder.
+
+\section{{\tt colormap}}\label{sec:colormap}
+
+The \verb#colormap# tool visualizes the data encoded in a DEM by reading in a DEM and outputting a corresponding color-coded height image. The colors run from blue for the lowest height value to red for the highest height value.  To adjust the image colors, use flags \verb#--min# and \verb#--max# to set the highest and lowest values on the blue-to-red scale.  For example, suppose \verb#firstDEM.tif# has heights in [0,100] and \verb#secondDEM.tif# has heights in [0,120]. To visualize \verb#firstDEM.tif# using the same color scale as \verb#secondDEM.tif#, run \verb#colormap --max 120 firstDEM.tif#.
+
+Other command-line options for colormap are listed in Table~\ref{tbl:colormap}.
+
+\begin{longtable}{|l|p{10cm}|}
+\caption{Command-line options for colormap}
+\label{tbl:colormap}
+\endfirsthead
+\endhead
+\endfoot
+\endlastfoot
+\hline
+Option & Description \\ \hline \hline
+\verb#--help# & Display a help message \\ \hline
+\verb#--input-file arg# & Explicitly specify the input file \\ \hline
+\verb#-s [ --shaded-relief-file ] arg# & Specify a shaded relief image (grayscale) to apply to the colorized image \\ \hline
+\verb#-o [ --output-file ] arg# & Specify the output file \\ \hline
+\verb#--nodata-value arg# & Remap the DEM default value to the min altitude value \\ \hline
+\verb#--min arg# & Minimum height of the color map \\ \hline
+\verb#--max arg# & Maximum height of the color map \\ \hline
+\verb#--verbose# & Verbose output \\ \hline
+\end{longtable}
+
+\section{{\tt correlate}}\label{sec:correlate}
+
+The \verb#correlate# tools is mostly a demo for the Stereo Module
+(Chapter \ref{ch:stereo-module}) yet that does not necessarily make it
+boring. It allows for playing around with settings provided in the
+{\tt CorrelateView}. The user must specify 2 images taken of the same
+object (preferably aligned prior with a match file). This will then
+produce 2 output images that represent the horizontal and vertical
+disparities between the images. Again the Stereo Module demos results
+that can be created with \verb#correlate# in Figure
+\ref{fig:disparity-example}.
+
+All commands to \verb#correlate# must be explicit (as there are no
+positional inputs). An example of using the tool is given below.
+
+\begin{verbatim}
+  correlate --slog 1.5 --left DSC00623.JPG --right DSC00625.JPG
+    --xkernel 25 --ykernel 25 -xrange 100 -yrange 100 --pyramid
+\end{verbatim}
+
+\begin{longtable}{|l|p{10cm}|} 
+\caption{Command-line options for correlate}
+\label{tbl:correlate}
+\endfirsthead
+\endhead
+\endfoot
+\endlastfoot
+\hline
+Option & Description \\ \hline \hline
+\verb#--help# & Display this help message \\ \hline
+\verb#--left arg# & Explicitly specify the 'left' input file \\ \hline
+\verb#--right arg# & Explicitly specify the 'right' input file \\ \hline
+\verb#--slog arg (=1)# & Apply SLoG filter with the given sigma, or 0 to disable \\ \hline
+\verb#--log arg (=0)# & Apply LoG filter with the given sigma, or 0 to disable \\ \hline
+\verb#--xoffset arg (=0)# & Overall horizontal offset between images \\ \hline
+\verb#--yoffset arg (=0)# & Overall vertical offset between images \\ \hline
+\verb#--xrange arg (=5)# & Allowed range of horizontal disparity \\ \hline
+\verb#--yrange arg (=5)# & Allowed range of vertical disparity \\ \hline
+\verb#--xkernel arg (=5)# & Horizontal correlation kernel size \\ \hline
+\verb#--ykernel arg (=5)# & Vertical correlation kernel size \\ \hline
+\verb#--lrthresh arg (=1)# & Left/right correspondence threshold \\ \hline
+\verb#--csthresh arg (=1)# & Correlation score rejection threshold (1.0 is Off -- 2.0 is Aggressive outlier rejection \\ \hline
+\verb#--cost-blur arg (=1)# & Kernel size for blurring the cost image \\ \hline
+\verb#--correlator-type arg (=0)# & 0 - Abs diff; 1 = Sq Diff; 2 - NormXCorr \\ \hline
+\verb#--hsubpix# & Enable horizontal sub-pixel correlation \\ \hline
+\verb#--vsubpix# & Enable vertical sub-pixel correlation \\ \hline
+\verb#--affine-subpix# & Enable affine adaptive sub-pixel correlation (slower, but more accurate) \\ \hline
+\verb#--reference# & Use the slower, simpler reference correlator \\ \hline
+\verb#--pyramid# & Use the pyramid based correlator \\ \hline
+\verb#--bitimage# & Force the use of the optimized bit-image correlator \\ \hline
+\verb#--nonbitimage# & Force the use of the slower, non bit-image optimized correlator \\ \hline
+\end{longtable}
+
+\section{{\tt hillshade}}\label{sec:hillshade}
+
+An alternative visualization of the DEM data may be desired. For this,
+the \verb#hillshade# tool reads in a DEM and outputs an image of that
+DEM as though it were a three-dimensional surface, with every pixel
+shaded as though it were illuminated by a light from a specified
+location.
+
+\begin{longtable}{|l|p{11cm}|} 
+\caption{Command-line options for hillshade}
+\label{tbl:hillshade}
+\endfirsthead
+\endhead
+\endfoot
+\endlastfoot
+\hline
+Option & Description \\ \hline \hline
+\verb#--help# & Display a help message\\ \hline
+\verb#--input-file arg# & Explicitly specify the input file\\ \hline
+\verb#-o [ --output-file ] arg# & Specify the output file\\ \hline
+\verb#-a [ --azimuth ] arg (=0)# & Sets the direction that the light source is coming from (in degrees).  Zero degrees is to the right, with positive degree counter-clockwise.\\ \hline
+\verb#-e [ --elevation ] arg (=45)# & Set the elevation of the light source (in degrees)\\ \hline
+\verb#-s [ --scale ] arg (=0)# & Set the scale of a pixel (in the same units as the DTM height values\\ \hline
+\verb#--nodata-value arg# & Remap the DEM default value to the min altitude value\\ \hline
+\verb#--blur arg# & Pre-blur the DEM with the specified sigma\\ \hline
+\end{longtable}
+
+
+% \section{{\tt geoblend}}\label{sec:geoblend}
+
+% \verb#geoblend# merges multiple DEMs into one large DEM.  By default, it blends the DEMs so that the output is smooth at the boundaries.  Disable this feature using the \verb#--draft# flag.  Other options are listed in Table~\ref{tbl:geoblend}.
+
+% \begin{longtable}{|l|p{9cm}|} 
+% \caption{Command-line options for geoblend}
+% \label{tbl:geoblend}
+% \endfirsthead
+% \endhead
+% \endfoot
+% \endlastfoot
+% \hline
+% Option & Description \\ \hline \hline
+% \verb#--help# & Display a help message \\ \hline
+% \verb#-o [ --mosaic-name ] arg (=mosaic)# & Specify base output directory\\ \hline
+% \verb#-t [ --output-file-type ] arg (=tif)# & Output file type\\ \hline
+% \verb#--tile-output# & Output the leaf tiles of a quadtree, instead of a single blended image.\\ \hline
+% \verb#--tiled-tiff arg (=0)# & Output a tiled TIFF image, with given tile size (0 disables, TIFF only)\\ \hline
+% \verb#--patch-size arg (=256)# & Patch size for tiled output, in pixels\\ \hline
+% \verb#--patch-overlap arg (=0)# & Patch overlap for tiled output, in pixels\\ \hline
+% \verb#--cache arg (=1024)# & Cache size, in megabytes\\ \hline
+% \verb#--draft# & Draft mode (no blending)\\ \hline
+% \verb#--ignore-alpha# & Ignore the alpha channel of the input images, and don't write an alpha channel in output.\\ \hline
+% \verb#--nodata-value arg# & Pixel value to use for nodata in input and output (when there's no alpha channel)\\ \hline
+% \verb#--channel-type arg# & Images' channel type. One of [uint8, uint16, int16, float].\\ \hline
+% \verb#--verbose# & Verbose output\\ \hline
+% \end{longtable}
+
+
+\section{{\tt georef}}\label{sec:georef}
+
+The \verb#georef# tool lets you specify the geographical coordinates and projection method for an image taken of the surface of a planet. 
+
+\begin{longtable}{|l|p{8.5cm}|}
+\caption{Command-line options for georef}
+\label{tbl:georef}
+
+
+\endfirsthead
+\endhead
+\endfoot
+\endlastfoot
+\hline
+
+Option & Description \\ \hline \hline
+General Options \\ \hline
+\verb#-o [ --output-file ] arg (=output.tif)# & Specify the base output filename \\ \hline
+\verb#-q [ --quiet ]# & Quiet output \\ \hline
+\verb#-v [ --verbose ]# & Verbose output \\ \hline
+\verb#--cache arg (=1024)# & Cache size, in megabytes \\ \hline
+\verb#--help# & Display a help message \\ \hline
+Projection Options \\ \hline
+\verb#--copy arg# & Copy the projection from the given file \\ \hline
+\verb#--tfw arg# & Create a .tfw sidecar file with the given filename rather than a full copy of the image file \\ \hline
+\verb#--north arg# & The northernmost latitude in degrees \\ \hline
+\verb#--south arg# & The southernmost latitude in degrees \\ \hline
+\verb#--east arg# & The easternmost longitude in degrees \\ \hline
+\verb#--west arg# & The westernmost longitude in degrees \\ \hline
+\verb#--sinusoidal# & Assume a sinusoidal projection \\ \hline
+\verb#--mercator# & Assume a Mercator projection \\ \hline
+\verb#--transverse-mercator# & Assume a transverse Mercator projection \\ \hline
+\verb#--orthographic# & Assume an orthographic projection \\ \hline
+\verb#--stereographic# & Assume a stereographic projection \\ \hline
+\verb#--lambert-azimuthal# & Assume a Lambert azimuthal projection \\ \hline
+\verb#--utm arg# & Assume UTM projection with the given zone \\ \hline
+\verb#--proj-lat arg# & The center of projection latitude (if applicable) \\ \hline
+\verb#--proj-lon arg# & The center of projection longitude (if applicable) \\ \hline
+\verb#--proj-scale arg# & The projection scale (if applicable) \\ \hline
+\verb#--nudge-x arg# & Nudge the image, in projected coordinates \\ \hline
+\verb#--nudge-y arg# & Nudge the image, in projected coordinates \\ \hline
+\verb#--pixel-as-point# & Encode that the pixel location (0,0) is the center of the upper left hand pixel (the default, if you specify nothing, is to set the upper left hand corner of the upper left pixel as (0,0) (i.e. PixelAsArea). \\ \hline
+\end{longtable}
+
+
+\section{{\tt image2qtree}}\label{sec:image2qtree}
+
+\verb#image2qtree# turns a georeferenced image (or images) into a quadtree with geographical metadata.  For example, it can output a kml file for viewing in Google Earth.
+
+\begin{longtable}{|l|p{9cm}|}
+\caption{Command-line options for image2qtree}
+\label{tbl:image2qtree}
+
+
+\endfirsthead
+\multicolumn{2}{c}%
+{{\tablename\ \thetable{} -- continued from previous page}} \\
+
+\endhead
+\hline \multicolumn{2}{|r|}{{Continued on next page}} \\ \hline
+
+\endfoot
+\endlastfoot
+
+\hline
+Option & Description \\ \hline \hline
+General Options \\ \hline
+\verb#-o [ --output-name ] arg# & Specify the base output directory\\ \hline
+\verb#-q [ --quiet ]# & Quiet output\\ \hline
+\verb#-v [ --verbose ]# & Verbose output\\ \hline
+\verb#--cache arg (=1024)# & Cache size, in megabytes\\ \hline
+\verb#--help# & Display a help message\\ \hline
+
+Input Options\\ \hline
+\verb#--force-wgs84# & Use WGS84 as the input images' geographic coordinate systems, even if they're not (old behavior)\\ \hline
+\verb#--pixel-scale arg (=1)# & Scale factor to apply to pixels\\ \hline
+\verb#--pixel-offset arg (=0)# & Offset to apply to pixels\\ \hline
+\verb#--normalize# & Normalize input images so that their full dynamic range falls in between [0,255]\\ \hline
+
+Output Options\\ \hline
+\verb#-m [ --output-metadata ] arg (=none)# & Specify the output metadata type. One of [kml, tms, uniview, gmap, celestia, none]\\ \hline
+\verb#--file-type arg (=png)# & Output file type\\ \hline
+\verb#--channel-type arg (=uint8)# & Output (and input) channel type. One of [uint8, uint16, int16, float]\\ \hline
+\verb#--module-name arg (=marsds)# & The module where the output will be placed. Ex: marsds for Uniview, or Sol/Mars for Celestia\\ \hline
+\verb#--terrain# & Outputs image files suitable for a Uniview terrain view. Implies output format as PNG, channel type uint16. Uniview only\\ \hline
+\verb#--jpeg-quality arg (=0.75)# & JPEG quality factor (0.0 to 1.0)\\ \hline
+\verb#--png-compression arg (=3)# & PNG compression level (0 to 9)\\ \hline
+\verb#--palette-file arg# & Apply a palette from the given file\\ \hline
+\verb#--palette-scale arg# & Apply a scale factor before applying the palette\\ \hline
+\verb#--palette-offset arg# & Apply an offset before applying the palette\\ \hline
+\verb#--tile-size arg (=256)# & Tile size, in pixels\\ \hline
+\verb#--max-lod-pixels arg (=1024)# & Max LoD in pixels, or -1 for none (kml only)\\ \hline
+\verb#--draw-order-offset arg (=0)# & Offset for the <drawOrder> tag for this overlay (kml only)\\ \hline
+\verb#--composite-multiband # & Composite images using multi-band blending\\ \hline
+\verb#--aspect-ratio arg (=1)# & Pixel aspect ratio (for polar overlays; should be a power of two)\\ \hline
+
+Projection Options\\ \hline
+\verb#--north arg# & The northernmost latitude in degrees\\ \hline
+\verb#--south arg# & The southernmost latitude in degrees\\ \hline
+\verb#--east arg# & The easternmost longitude in degrees\\ \hline
+\verb#--west arg# & The westernmost longitude in degrees\\ \hline
+\verb#--force-wgs84# & Assume the input images' geographic coordinate systems are WGS84, even if they're not (old behavior)\\ \hline
+\verb#--sinusoidal# & Assume a sinusoidal projection\\ \hline
+\verb#--mercator# & Assume a Mercator projection\\ \hline
+\verb#--transverse-mercator# & Assume a transverse Mercator projection\\ \hline
+\verb#--orthographic# & Assume an orthographic projection\\ \hline
+\verb#--stereographic# & Assume a stereographic projection\\ \hline
+\verb#--lambert-azimuthal# & Assume a Lambert azimuthal projection\\ \hline
+\verb#--lambert-conformal-conic# & Assume a Lambert Conformal Conic projection\\ \hline
+\verb#--utm arg# & Assume UTM projection with the given zone\\ \hline
+\verb#--proj-lat arg# & The center of projection latitude (if applicable)\\ \hline
+\verb#--proj-lon arg# & The center of projection longitude (if applicable)\\ \hline
+\verb#--proj-scale arg# & The projection scale (if applicable)\\ \hline
+\verb#--std-parallel1 arg# & Standard parallels for Lambert Conformal Conic projection\\ \hline
+\verb#--std-parallel2 arg# & Standard parallels for Lambert Conformal Conic projection\\ \hline
+\verb#--nudge-x arg# & Nudge the image, in projected coordinates\\ \hline
+\verb#--nudge-y arg# & Nudge the image, in projected coordinates\\ \hline
+\end{longtable}
+
+
+\section{{\tt ipfind}}\label{sec:ipfind}
+The \verb#ipfind# tool processes images for interest points. Interest points are features with in an image that can be reliably located across multiple images. \verb#ipfind# is a tool that is best paired with another tool, \verb#ipmatch#, described in the next Section~\ref{sec:ipmatch}. 
+
+The \verb#--interest-operator# option allows for the user to change the algorithm used to detect interest points. \verb#[LoG]# is the simplest and also the slowest, but is often pretty reliable. All method work to some extent by identify points where the image gradients all point inwardly as on a hill. They also identify the polar opposite, all gradients pointing away.
+
+The \verb#--descriptor-genetator# option allows for the user to change the algorithm use to describe an interest point. Interest points are described so that they may have a unique identity so that they maybe located in different images. \verb#[patch]# is the simplest descriptor, as it is actually the image cropped around an interest point. 
+
+The result of \verb#ipfind# is a special file called a \emph{Vision Workbench interest point file}, and it has the extension \verb#.vwip#. The \emph{Interest Point Module} (Chapter~\ref{ch:interestpoint-module}) contains routines that can open and process such files.
+
+Usage: \verb#ipfind [options] <image files>...#. Other command line arguments are listed in Table~\ref{tbl:ipfind}
+
+\begin{longtable}{|l|p{9cm}|}
+\caption{Command-line options for ipfind}
+\label{tbl:ipfind}
+\endfirsthead
+\endhead
+\endfoot
+\endlastfoot
+\hline
+Option & Description \\ \hline \hline
+\verb#--help# & Display this table\\ \hline
+\verb#--num-threads arg (=0)# & Set the number of threads for interest point detection. Setting the num\_threads to zero causes ipfind to use the vision workbench default number of threads.\\ \hline
+\verb#-t [ --tile-size ] arg (=2048)# & Specify the tile size for processing interest points. (Useful when working with large images).\\ \hline
+\verb#-l [ --lowe]# & Save the interest points in an ASCII data format that is compatible with the Lowe-SIFT toolchain.\\ \hline
+\verb#-d [ --debug-image ]# & Write out debug images. This will highlight the found interest points.\\ \hline
+\verb#--interest-operator arg (=LoG)# & Choose an interest point metric from [LoG, Harris].\\ \hline
+\verb#--log-threshold arg (=0.03)# & Sets the threshold for the Laplacian of Gaussian interest operator.\\ \hline
+\verb#--harris-threshold arg (=1e-5)# & Sets the threshold for the Harris interest operator.\\ \hline
+\verb#--max-points arg (=0)# & Sets the maximum number of interest points you want returned. The most \"interesting\" points are selected.\\ \hline
+\verb#--single-scale# & Turn off scale-invariant interest point detection. This option only searches for interest points in the first octave of the scale space. This means faster operation at a cost of quality.\\ \hline
+\verb#--descriptor-generator arg (=patch)# & Choose a descriptor generator from [patch,pca].\\ \hline
+\end{longtable}
+
+
+\section{{\tt ipmatch}}\label{sec:ipmatch}
+The \verb#ipmatch# tool processes images for interest points and matches them across images pair wise. It exactly one step longer than the \verb#ipfind# tool. This tool will load up the images and their corresponding \verb#.vwip# files and will run a matching algorithm looking for interest points with similar descriptors. If a corresponding \verb#.vwip# file can not be found for an input image, \verb#ipmatch# will actually call \verb#ipfind# using the default settings to create a interest point file.
+
+To filter out mismatched interest points, a RANSAC method is used. The fitting functor used to determine if a match is valid or not can be selected via the \verb#--ransac-constraint# option. The options available are transform matrices with varying degrees of freedom.
+
+The result of \verb#ipmatch# is a special file called a \emph{Vision Workbench match file}, and it has the extension \verb#.vwip#. The \emph{Interest Point Module} (Chapter~\ref{ch:interestpoint-module}) contains routines that can open and process such files.
+
+Usage: \verb#ipmatch [options] <input file1> <input file2>#. Other command line arguments are listed in Table~\ref{tbl:ipmatch}
+
+\begin{longtable}{|l|p{9cm}|}
+\caption{Command-line options for ipmatch}
+\label{tbl:ipmatch}
+\endfirsthead
+\endhead
+\endfoot
+\endlastfoot
+\hline
+Option & Description \\ \hline \hline
+\verb#--help# & Display this table\\ \hline
+\verb#-t [ --matcher-threshold ] arg (=0.8)# & Threshold for the interest point matcher.\\ \hline
+\verb#--non-kdtree# & Use an implementation of the interest matcher that is not reliant o a KDTree algorithm.\\ \hline
+\verb#-r [ --ransac-constraint ] arg (=similarity)# & RANSAC constraint type. Choose one of: [similarity, homography, or none].\\ \hline
+\verb#-i [ --inlier-threshold ] arg (=10)# & RANSAC inlier threshold. Increase the number to allow more matches through that might agree with RANSAC.\\ \hline
+\verb#-d [ --debug-image ]# & Write out debug images. This will highlight all the matches found between two image.\\ \hline
+\end{longtable}
+
+
+\section{{\tt slopemap}}\label{sec:slopemap} %but it won't actually be north on earth..what?
+The \verb#slopemap# tool takes in an image with geodetic coordinates and calculates the gradient angle (steepness of slope) and aspect (direction of slope) in radians of each point on a DEM. The gradient angle is calculated as the angle between the steepest slope and the horizon; the aspect is the angle clockwise between the normal of the surface and a vector pointing to north, both projected onto the tangent plane of the unelevated surface at that point. 
+
+Outputs include two georeferenced \verb#tif#s encoding \verb#float# values for aspect and gradient angle (by default), as well as one RGB image displaying a colorized representation of both gradient angle and aspect in which aspect is represented as hue and 
+gradient angle is represented as a combination of saturation and value (needs flag). The output files are named according to the command line argument \verb#output-prefix#, with corresponding suffixes of \verb#_aspect.tif#, \verb#_gradient.tif#, and \verb#_pretty.tif#
+
+The implementation calculates gradient angle and aspect by one of several methods: \verb#[ horn,# \verb#fh,# \verb#sa,# \verb#planefit ]#. \verb#planefit# refers to fitting a plane by least squares to all nine points of a 3x3 window around the point in question, weighted equally. The implementation involves using singular value decomposition to solve a homogeneous linear system of equations and is slower than the other methods. 
+
+\verb#horn#, \verb#fh#, and \verb#sa# are modified versions of finite difference methods. They correspond to modified versions of Horn's method, Fleming and Hoffer's method (also known as Ritter's method as well as the rook's case), and Sharpnack and Akin's method (also known as the queen's case). They are all variations of a similar method: approximate a west-east gradient and a south-north gradient and subsequently calculate gradient angle and aspect from that. The modification to these algorithms is that they do not require sampling from a square grid; when there is such a grid, the results are the same as the unmodified versions. There is also a flag, \verb#spherical#, that determines whether the datum is interpreted to be spherical or flat (defaults to spherical), for an additional modification, as the original algorithms assumed a flat sampling grid. 
+
+Usage: \verb#slopemap [options] <input file>#. Other command line arguments are listed in Table~\ref{tbl:slopemap}
+
+\begin{longtable}{|l|p{11cm}|} 
+\caption{Command-line options for slopemap}
+\label{tbl:slopemap}
+\endfirsthead
+\endhead
+\endfoot
+\endlastfoot
+\hline
+Options & Description\\ \hline \hline
+\verb#--help# & Display this help message\\ \hline
+\verb#--input file arg# & Explicitly specify the input file\\ \hline
+\verb#-o [ --output-prefix ]# & Output prefix\\ \hline
+\verb#--no-aspect# & Do not output aspect (\verb#[output-prefix]_aspect.tif#)\\ \hline
+\verb#--no-gradient# & Do not output gradient (\verb#[output-prefix]_gradient.tif#)\\ \hline
+\verb#--pretty# & Output colored image (\verb#[output-prefix]_pretty.tif#)\\ \hline
+\verb#--algorithm arg (=moduneven)# & Choose an algorithm to calculate slope/aspect from \verb#[ horn, fh, sa, planefit ]#. Horn: Horn's algorithm; FH: Fleming \& Hoffer's (rook's case); SA: Sharpnack \& Akin's (queen's case)\\ \hline
+\verb#--spherical arg (=1)# & Spherical/elliptical datum (recommended); otherwise, a flat grid\\ \hline
+\end{longtable}
+
